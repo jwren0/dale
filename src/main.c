@@ -7,9 +7,10 @@
 
 #include <stdio.h>
 
+#include "args.h"
 #include "structs.h"
 
-int main(void) {
+void test(void) {
     DNSQuery query;
     // TODO: Receive this from a client
     uint8_t buf[MAX_UDP << 1] = {
@@ -55,8 +56,7 @@ int main(void) {
     };
 
     if (DNSQuery_init(&query, buf) != 0) {
-        fprintf(stderr, "ERROR: DNSQuery_init failed\n");
-        return 1;
+        fprintf(stderr, "DNSQuery_init failed\n");
     }
 
     printf(
@@ -65,4 +65,23 @@ int main(void) {
         query.header.id,
         query.question.qname
     );
+
+}
+
+int main(int argc, char *argv[]) {
+    Args args = Args_default;
+
+    // Ignore malformed args
+    if (argc < 1) {
+        fprintf(stderr, "argc must be at least 1\n");
+        return 1;
+    }
+
+    // Show help by default
+    if (argc < 2) {
+        Args_help(argv[0]);
+        return 0;
+    }
+
+    Args_parse(&args, argc, argv);
 }
