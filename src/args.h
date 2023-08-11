@@ -54,7 +54,7 @@ typedef struct {
  */
 #define Args_default \
 { \
-    .daemon = false, \
+    .daemon = true, \
     .lhost = "127.0.0.1", \
     .lport = 53, \
     .rhost = NULL, \
