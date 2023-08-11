@@ -39,7 +39,7 @@
  */
 typedef struct {
     uint16_t id;
-    uint16_t meta;
+    uint16_t _meta;
     uint16_t qdcount;
     uint16_t ancount;
     uint16_t nscount;
@@ -47,69 +47,54 @@ typedef struct {
 } DNSHeader;
 
 /**
- * A macro to retrieve 'ID' from a DNSHeader.
+ * Updates a DNSHeader struct based on a provided
+ * pointer to the beginning of a header.
+ *
+ * @param header The DNSHeader struct to update.
+ * @param buf The buffer containing the header.
+ * @return zero on success, non-zero otherwise.
  */
-#define DNSHeader_id(header) (header).id
+int DNSHeader_init(DNSHeader *header, uint8_t *buf);
 
 /**
  * A macro to retrieve 'QR' from a DNSHeader.
  */
-#define DNSHeader_qr(header) (header).meta & (1 << 15)
+#define DNSHeader_qr(header) (header)._meta & (1 << 15)
 
 /**
  * A macro to retrieve 'Opcode' from a DNSHeader.
  */
-#define DNSHeader_opcode(header) (header).meta & (15 << 14)
+#define DNSHeader_opcode(header) (header)._meta & (15 << 14)
 
 /**
  * A macro to retrieve 'AA' from a DNSHeader.
  */
-#define DNSHeader_aa(header) (header).meta & (1 << 10)
+#define DNSHeader_aa(header) (header)._meta & (1 << 10)
 
 /**
  * A macro to retrieve 'TC' from a DNSHeader.
  */
-#define DNSHeader_tc(header) (header).meta & (1 << 9)
+#define DNSHeader_tc(header) (header)._meta & (1 << 9)
 
 /**
  * A macro to retrieve 'RD' from a DNSHeader.
  */
-#define DNSHeader_rd(header) (header).meta & (1 << 8)
+#define DNSHeader_rd(header) (header)._meta & (1 << 8)
 
 /**
  * A macro to retrieve 'RA' from a DNSHeader.
  */
-#define DNSHeader_ra(header) (header).meta & (1 << 7)
+#define DNSHeader_ra(header) (header)._meta & (1 << 7)
 
 /**
  * A macro to retrieve 'Z' from a DNSHeader.
  */
-#define DNSHeader_z(header) (header).meta & (7 << 6)
+#define DNSHeader_z(header) (header)._meta & (7 << 6)
 
 /**
  * A macro to retrieve 'RCODE' from a DNSHeader.
  */
-#define DNSHeader_rcode(header) (header).meta & (1 << 3)
-
-/**
- * A macro to retrieve 'QDCOUNT' from a DNSHeader.
- */
-#define DNSHeader_qdcount(header) (header).qdcount
-
-/**
- * A macro to retrieve 'ANCOUNT' from a DNSHeader.
- */
-#define DNSHeader_ancount(header) (header).ancount
-
-/**
- * A macro to retrieve 'NSCOUNT' from a DNSHeader.
- */
-#define DNSHeader_nscount(header) (header).nscount
-
-/**
- * A macro to retrieve 'ARCOUNT' from a DNSHeader.
- */
-#define DNSHeader_arcount(header) (header).arcount
+#define DNSHeader_rcode(header) (header)._meta & (1 << 3)
 
 /**
  * A DNS question section as defined by
