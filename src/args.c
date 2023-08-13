@@ -1,8 +1,7 @@
 #include "args.h"
+#include "dale.h"
 
-#define VERSION "v0.0.1"
-
-void Args_help(char *program) {
+void Args_help(const char *program) {
     printf(
         "%s, %s\n"
         "\nUsage:\n"
@@ -20,7 +19,7 @@ void Args_help(char *program) {
 }
 
 // TODO: Do something similar for validating hosts
-int Args_store_port(unsigned int *port, char *input) {
+int Args_store_port(unsigned int *port, const char *input) {
     char *endptr = NULL;
     long result;
 

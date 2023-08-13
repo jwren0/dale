@@ -6,7 +6,7 @@
  * command line arguments passed to dale.
  *
  * @author  jwren0
- * @version 2023-08-11
+ * @version 2023-08-13
  */
 
 #include <stdbool.h>
@@ -66,7 +66,7 @@ typedef struct {
  *
  * @param program The program name.
  */
-void Args_help(char *program);
+void Args_help(const char *program);
 
 /**
  * Converts a char[] input into a port number if valid.
@@ -75,7 +75,7 @@ void Args_help(char *program);
  * @param input The buffer to read a port from.
  * @return zero on success, non-zero otherwise
  */
-int Args_store_port(unsigned int *port, char *input);
+int Args_store_port(unsigned int *port, const char *input);
 
 /**
  * Parses command line arguments into an Args struct.

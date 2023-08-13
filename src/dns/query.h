@@ -1,12 +1,12 @@
-#ifndef DALE_STRUCTS_H
-#define DALE_STRUCTS_H
+#ifndef DALE_DNS_QUERY_H
+#define DALE_DNS_QUERY_H
 
 /**
  * A file containing definitions for structs, macros and functions
  * relating to DNS queries.
  *
  * @author  jwren0
- * @version 2023-08-11
+ * @version 2023-08-13
  */
 
 #include <arpa/inet.h>
@@ -26,12 +26,6 @@
  * by RFC 1035 section 2.3.4.
  */
 #define MAX_LABEL 63
-
-/**
- * The maximum size of a UDP message as defined
- * by RFC 1035 section 2.3.4.
- */
-#define MAX_UDP 512
 
 /**
  * A DNS header as described by
@@ -54,7 +48,7 @@ typedef struct {
  * @param buf The buffer containing the header.
  * @return zero on success, non-zero otherwise.
  */
-int DNSHeader_init(DNSHeader *header, uint8_t *buf);
+int DNSHeader_init(DNSHeader *header, const char *buf);
 
 /**
  * A macro to retrieve 'QR' from a DNSHeader.
@@ -116,7 +110,7 @@ typedef struct {
  * @param buf The buffer containing the question section.
  * @return zero on success, non-zero otherwise.
  */
-int DNSQuestion_init(DNSQuestion *question, uint8_t *buf);
+int DNSQuestion_init(DNSQuestion *question, const char *buf);
 
 /**
  * A DNS query containing a header and question.
@@ -134,6 +128,6 @@ typedef struct {
  * @param buf The buffer containing the DNS query.
  * @return zero on success, non-zero otherwise.
  */
-int DNSQuery_init(DNSQuery *query, uint8_t *buf);
+int DNSQuery_init(DNSQuery *query, const char *buf);
 
-#endif // DALE_STRUCTS_H
+#endif // DALE_DNS_QUERY_H
