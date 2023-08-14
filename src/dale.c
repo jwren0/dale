@@ -35,9 +35,16 @@ void handle(Socks *socks) {
     );
 }
 
+void start(Socks socks) {
+    for (;;) {
+        handle(&socks);
+    }
+}
+
 int main(int argc, char *argv[]) {
     Socks socks;
     Args args = Args_default;
+    pid_t pid;
 
     // Ignore malformed args
     if (argc < 1) {
@@ -57,7 +64,20 @@ int main(int argc, char *argv[]) {
     Socks_init(&socks, &args);
 
     // Start handling queries
-    for (;;) {
-        handle(&socks);
+    if (args.daemon == true) {
+        pid = fork();
+
+        if (pid < 0) {
+            perror("fork");
+            return 1;
+        }
+
+        // Child process
+        if (pid == 0) {
+            setsid();
+            start(socks);
+        }
+    } else {
+        start(socks);
     }
 }

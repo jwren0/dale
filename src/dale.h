@@ -9,6 +9,7 @@
  */
 
 #include <stdio.h>
+#include <unistd.h>
 #include "args.h"
 #include "server.h"
 
