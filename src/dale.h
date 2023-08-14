@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include "args.h"
+#include "filter/filter.h"
 #include "net/server.h"
 
 #define VERSION "v0.0.1"

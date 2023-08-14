@@ -78,6 +78,11 @@ ssize_t get_query(
         return -1;
     }
 
+    printf(
+        "Received query from downstream: %s\n",
+        inet_ntoa(socks->client.sin_addr)
+    );
+
     return count;
 }
 

@@ -1,7 +1,9 @@
 #include "dale.h"
 
+// TODO: Send back responses on errors
 void handle(Socks *socks) {
     ssize_t count;
+    int result;
     char query[MAX_UDP << 1] = {0};
     char resp[MAX_UDP << 1] = {0};
 
@@ -14,8 +16,17 @@ void handle(Socks *socks) {
     // Check for failure
     if (count <= 0) return;
 
-    // TODO: Check query
-    // if (check_query(query, count) != 0) return;
+    // Check if the query should be filtered
+    result = filter_query(query);
+
+    // Check for failure
+    if (result < 0) return;
+
+    // Filtered query
+    if (result == 0) {
+        // TODO: Send back a response for filtering
+        return;
+    }
 
     // Forward upstream
     count = forward_query(
