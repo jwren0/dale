@@ -1,5 +1,4 @@
 #include "server.h"
-#include "arpa/inet.h"
 
 void Sock_init(
     Sock *sock,
