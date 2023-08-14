@@ -14,8 +14,6 @@ void handle(Socks *socks) {
     // Check for failure
     if (count <= 0) return;
 
-    puts("Received query");
-
     // TODO: Check query
     // if (check_query(query, count) != 0) return;
 
@@ -29,16 +27,12 @@ void handle(Socks *socks) {
     // Check for failure
     if (count <= 0) return;
 
-    puts("Forwarded query, received response");
-
     // TODO: Validate response (?)
     // Forward response back to client (downstream)
     forward_response(
         socks,
         resp, count
     );
-
-    puts("Forwarded response back to client");
 }
 
 int main(int argc, char *argv[]) {

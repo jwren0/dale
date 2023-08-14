@@ -66,11 +66,19 @@ int DNSHeader_init(DNSHeader *header, const char *buf) {
     header->id = ntohs(hptr[0]);
     header->_meta = ntohs(hptr[1]);
 
-    // TODO: Validate that QDCOUNT is 1
     header->qdcount = ntohs(hptr[2]);
     header->ancount = ntohs(hptr[3]);
     header->nscount = ntohs(hptr[4]);
     header->arcount = ntohs(hptr[5]);
+
+    if (header->qdcount != 1) {
+        fprintf(
+            stderr,
+            "Error: Malformed DNS query, QDCOUNT was: %d\n",
+            header->qdcount
+        );
+        return 1;
+    }
 
     return 0;
 }

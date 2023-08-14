@@ -1,4 +1,5 @@
 #include "server.h"
+#include "arpa/inet.h"
 
 void Sock_init(
     Sock *sock,
@@ -66,6 +67,9 @@ ssize_t get_query(
         &(socks->client), &client_len
     );
 
+    check_recv(count);
+    if (count <= 0) return count;
+
     // Check for truncation
     if (client_len > sizeof(socks->client)) {
         fprintf(
@@ -85,9 +89,23 @@ ssize_t forward_query(
     char *resp,
     const size_t resp_len
 ) {
-    // TODO: Check count
-    // TODO: Validate response address
+    // For validating response address
+    const size_t MAX_IP = 16;
+    char expect_ip[MAX_IP+1];
+    char check_ip[MAX_IP+1];
+    char *tmp = NULL;
+
+    struct sockaddr_in check_addr;
+    socklen_t check_len = sizeof(check_addr);
     ssize_t count;
+
+    // Initialize buffers
+    memset(expect_ip, 0, MAX_IP+1);
+    memset(check_ip, 0, MAX_IP+1);
+
+    // Save expected IP
+    tmp = inet_ntoa(socks->up.info.sin_addr);
+    strncpy(expect_ip, tmp, MAX_IP);
 
     // Forward query upstream
     count = sendto(
@@ -98,13 +116,45 @@ ssize_t forward_query(
         sizeof(socks->up.info)
     );
 
+    check_send(count);
+    if (count <= 0) return count;
+
+    printf(
+        "Forwarded query upstream: %s\n",
+        expect_ip
+    );
+
     // Receive a response from upstream
     count = recvfrom(
         socks->up.fd,
         resp, resp_len,
         0,
-        NULL, NULL
+        (struct sockaddr *) &check_addr, &check_len
     );
+
+    check_recv(count);
+
+    // Validate response address
+    // Save response IP
+    tmp = inet_ntoa(check_addr.sin_addr);
+    strncpy(check_ip, tmp, MAX_IP);
+
+    printf(
+        "Received response from upstream: %s\n",
+        check_ip
+    );
+
+    if (strncmp(expect_ip, check_ip, MAX_IP+1) != 0) {
+        fprintf(
+            stderr,
+            "Expected response IP from upstream resolver is mismatched:\n"
+            "Expected: %s\n"
+            "Actual:   %s\n",
+            expect_ip, check_ip
+        );
+
+        return -1;
+    }
 
     return count;
 }
@@ -114,7 +164,6 @@ void forward_response(
     const char *resp,
     const size_t resp_len
 ) {
-    // TODO: Check count
     ssize_t count;
 
     // Send the response downstream
@@ -125,5 +174,9 @@ void forward_response(
         &(socks->client), sizeof(socks->client)
     );
 
-    (void) count;
+    check_send(count);
+
+    if (count > 0) {
+        printf("Forwarded response downstream\n");
+    }
 }

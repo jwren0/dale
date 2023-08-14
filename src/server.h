@@ -22,6 +22,28 @@
 #define MAX_UDP 512
 
 /**
+ * Checks the count returned from recvfrom.
+ */
+#define check_recv(count) { \
+    if (count < 0) { \
+        perror("recvfrom"); \
+    } else if (count == 0) { \
+        fprintf(stderr, "Error: Received nothing, skipping...\n"); \
+    } \
+}
+
+/**
+ * Checks the count returned from sendto.
+ */
+#define check_send(cout) { \
+    if (count < 0) { \
+        perror("sendto"); \
+    } else if (count == 0) { \
+        fprintf(stderr, "Error: Sent nothing\n"); \
+    } \
+}
+
+/**
  * A struct holding information about
  * a socket used for communication.
  */
