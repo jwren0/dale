@@ -5,18 +5,21 @@
  * A file containing core functionality.
  *
  * @author  jwren0
- * @version 2023-08-13
+ * @version 2023-08-14
  */
 
 #include <stdio.h>
 #include "args.h"
-#include "dns/query.h"
 #include "server.h"
 
 #define VERSION "v0.0.1"
 
 /**
- * Handles a single DNS query from downstream.
+ * This function will receive a single DNS query,
+ * Then, forwards the query to an upstream resolver if
+ * the query isn't blocked.
+ * Finally, receives a response and forwards back
+ * downstream.
  *
  * @param socks The socket information to use.
  */

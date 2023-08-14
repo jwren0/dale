@@ -1,77 +1,44 @@
 #include "dale.h"
 
 void handle(Socks *socks) {
-    char buf[MAX_UDP << 1] = {0};
-    char resp[MAX_UDP << 1] = {0};
     ssize_t count;
-    struct sockaddr addr;
-    socklen_t len = sizeof(addr);
+    char query[MAX_UDP << 1] = {0};
+    char resp[MAX_UDP << 1] = {0};
 
-    DNSQuery query;
-
-    count = recvfrom(
-        socks->down.fd,
-        buf, MAX_UDP + 1,
-        0,
-        &addr, &len
+    // Receive query from client (downstream)
+    count = get_query(
+        socks,
+        query, MAX_UDP + 1
     );
 
-    printf("Received query: %zu\n", count);
+    // Check for failure
+    if (count <= 0) return;
 
-    // TODO: Maybe send something useful back?
-    // Check failure
-    if (count < 0) {
-        perror("recvfrom");
-        return;
-    }
-    // Check nothing was received
-    if (count == 0) {
-        fprintf(stderr, "Error: Received nothing, skipping...\n");
-        return;
-    }
-    // Check malformed UDP
-    if (count > MAX_UDP) {
-        fprintf(stderr, "Error: Malformed UDP query received, skipping...\n");
-        return;
-    }
-    // Check for truncation
-    if (len > sizeof(addr)) {
-        fprintf(stderr, "Error: Sender's address was truncated, skipping...\n");
-        return;
-    }
-    // Check for malformed query
-    if (DNSQuery_init(&query, buf) != 0) {
-        fprintf(stderr, "Error: Malformed DNS query received, skipping...\n");
-        return;
-    }
+    puts("Received query");
 
-    printf(
-        "Successfully parsed query:\n"
-        "ID:    %d\n"
-        "QNAME: %s\n",
-        query.header.id,
-        query.question.qname
+    // TODO: Check query
+    // if (check_query(query, count) != 0) return;
+
+    // Forward upstream
+    count = forward_query(
+        socks,
+        query, count,
+        resp, MAX_UDP + 1
     );
 
-    count = up_forward(
-        &(socks->up),
-        buf, count,
-        resp, MAX_UDP
+    // Check for failure
+    if (count <= 0) return;
+
+    puts("Forwarded query, received response");
+
+    // TODO: Validate response (?)
+    // Forward response back to client (downstream)
+    forward_response(
+        socks,
+        resp, count
     );
 
-    puts("Here is the response:\n");
-
-    for (ssize_t i = 0; i < count; i++) {
-        printf("%#x ", resp[i]);
-    }
-
-    puts("");
-
-    down_forward(
-        &(socks->down),
-        resp, count,
-        addr, len
-    );
+    puts("Forwarded response back to client");
 }
 
 int main(int argc, char *argv[]) {

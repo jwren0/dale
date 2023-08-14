@@ -6,7 +6,7 @@
  * used for downstream and upstream communication.
  *
  * @author  jwren0
- * @version 2023-08-13
+ * @version 2023-08-14
  */
 
 #include <arpa/inet.h>
@@ -55,8 +55,24 @@ void Sock_init(
  * used for communication.
  */
 typedef struct {
+    /**
+     * Information about the socket listening for
+     * DNS queries from a client (downstream).
+     */
     Sock down;
+
+    /**
+     * Information about the socket forwarding
+     * queries to an upstream resolver and
+     * receiving responses.
+     */
     Sock up;
+
+    /**
+     * Information about the client a DNS query
+     * is being handled for.
+     */
+    struct sockaddr client;
 } Socks;
 
 /**
@@ -68,17 +84,33 @@ typedef struct {
 void Socks_init(Socks *socks, Args *args);
 
 /**
- * Forward a query upstream and get a response back.
+ * Receives a query from a cient.
  *
- * @param sock The upstream server's Sock struct.
+ * Updates the Socks struct with the client information.
+ *
+ * @param socks The Socks struct to use.
+ * @param query The buffer to store the query in.
+ * @param query_len The maximum query size expected.
+ * @return The number of bytes received. <= 0 on failure.
+ */
+ssize_t get_query(
+    Socks *socks,
+    char *query,
+    const size_t query_len
+);
+
+/**
+ * Forwards a query to the upstream resolver.
+ *
+ * @param socks The Socks struct to use.
  * @param query The query to forward.
  * @param query_len The size of the query.
- * @param resp Where to store the response.
- * @param resp_len The maximum size of the response.
- * @return zero on success, non-zero otherwise.
+ * @param resp The buffer to store the response in.
+ * @param resp_len The maximum response size expected.
+ * @return The number of bytes written to resp. <= 0 on failure.
  */
-ssize_t up_forward(
-    Sock *sock,
+ssize_t forward_query(
+    Socks *socks,
     const char *query,
     const size_t query_len,
     char *resp,
@@ -86,20 +118,16 @@ ssize_t up_forward(
 );
 
 /**
- * Forward a response downstream.
+ * Forwards a response back to the client.
  *
- * @param sock The Sock struct for downstream traffic.
+ * @param socks The Socks struct to use.
  * @param resp The response to forward.
- * @param resp_len The length of the response.
- * @param down The downstream client's sockaddr struct.
- * @param down_len The length of the client's sockaddr struct.
+ * @param resp_len The size of the response
  */
-int down_forward(
-    Sock *sock,
+void forward_response(
+    Socks *socks,
     const char *resp,
-    const size_t resp_len,
-    struct sockaddr down,
-    const socklen_t down_len
+    const size_t resp_len
 );
 
 #endif // DALE_SERVER_H

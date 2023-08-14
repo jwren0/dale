@@ -50,57 +50,80 @@ void Socks_init(Socks *socks, Args *args) {
     );
 }
 
-ssize_t up_forward(
-    Sock *up,
+ssize_t get_query(
+    Socks *socks,
+    char *query,
+    const size_t query_len
+) {
+    ssize_t count;
+    socklen_t client_len = sizeof(socks->client);
+
+    // Receive a query from downstream
+    count = recvfrom(
+        socks->down.fd,
+        query, query_len,
+        0,
+        &(socks->client), &client_len
+    );
+
+    // Check for truncation
+    if (client_len > sizeof(socks->client)) {
+        fprintf(
+            stderr,
+            "Error: Client's address was truncated.\n"
+        );
+        return -1;
+    }
+
+    return count;
+}
+
+ssize_t forward_query(
+    Socks *socks,
     const char *query,
     const size_t query_len,
     char *resp,
     const size_t resp_len
 ) {
-    // TODO: Actually validate count
+    // TODO: Check count
+    // TODO: Validate response address
     ssize_t count;
 
-    puts("Forwarding query to upstream");
+    // Forward query upstream
     count = sendto(
-        up->fd,
+        socks->up.fd,
         query, query_len,
         0,
-        (struct sockaddr *) &(up->info),
-        sizeof(up->info)
+        (struct sockaddr *) &(socks->up.info),
+        sizeof(socks->up.info)
     );
-    printf("Forwarded query to upstream: %zd\n", count);
 
-    // TODO: Validate this response maybe
-    puts("Waiting for response from upstream...");
+    // Receive a response from upstream
     count = recvfrom(
-        up->fd,
+        socks->up.fd,
         resp, resp_len,
         0,
         NULL, NULL
     );
-    printf("Received response from upstream: %zd\n", count);
 
     return count;
 }
 
-int down_forward(
-    Sock *sock,
+void forward_response(
+    Socks *socks,
     const char *resp,
-    const size_t resp_len,
-    struct sockaddr down,
-    const socklen_t down_len
+    const size_t resp_len
 ) {
+    // TODO: Check count
     ssize_t count;
 
-    // TODO: Validate count
-    puts("Forwarding response back downstream...");
+    // Send the response downstream
     count = sendto(
-        sock->fd,
+        socks->down.fd,
         resp, resp_len,
         0,
-        &down, down_len
+        &(socks->client), sizeof(socks->client)
     );
-    printf("Forwarded response downstream: %zd\n", count);
 
-    return 0;
+    (void) count;
 }
