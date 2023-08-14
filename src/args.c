@@ -18,7 +18,6 @@ void Args_help(const char *program) {
     );
 }
 
-// TODO: Do something similar for validating hosts
 int Args_store_port(unsigned int *port, const char *input) {
     char *endptr = NULL;
     long result;
