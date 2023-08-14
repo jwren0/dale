@@ -27,7 +27,6 @@ void handle(Socks *socks) {
     // Check for failure
     if (count <= 0) return;
 
-    // TODO: Validate response (?)
     // Forward response back to client (downstream)
     forward_response(
         socks,
