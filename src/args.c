@@ -141,4 +141,10 @@ void Args_parse(Args *args, int argc, char *argv[]) {
             exit(1);
         }
     }
+
+    // Check mandatory arguments
+    if (args->rhost == NULL) {
+        Args_help(argv[0]);
+        exit(1);
+    }
 }
