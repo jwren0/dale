@@ -63,7 +63,7 @@ ssize_t get_query(
         socks->down.fd,
         query, query_len,
         0,
-        &(socks->client), &client_len
+        (struct sockaddr *) &(socks->client), &client_len
     );
 
     check_recv(count);
@@ -170,12 +170,15 @@ void forward_response(
         socks->down.fd,
         resp, resp_len,
         0,
-        &(socks->client), sizeof(socks->client)
+        (struct sockaddr *) &(socks->client), sizeof(socks->client)
     );
 
     check_send(count);
 
     if (count > 0) {
-        printf("Forwarded response downstream\n");
+        printf(
+            "Forwarded response downstream: %s\n",
+            inet_ntoa(socks->client.sin_addr)
+        );
     }
 }

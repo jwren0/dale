@@ -94,7 +94,7 @@ typedef struct {
      * Information about the client a DNS query
      * is being handled for.
      */
-    struct sockaddr client;
+    struct sockaddr_in client;
 } Socks;
 
 /**
