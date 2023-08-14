@@ -1,12 +1,12 @@
-#ifndef DALE_DNS_QUERY_H
-#define DALE_DNS_QUERY_H
+#ifndef DALE_NET_DNS_H
+#define DALE_NET_DNS_H
 
 /**
  * A file containing definitions for structs, macros and functions
  * relating to DNS queries.
  *
  * @author  jwren0
- * @version 2023-08-13
+ * @version 2023-08-14
  */
 
 #include <arpa/inet.h>
@@ -130,4 +130,4 @@ typedef struct {
  */
 int DNSQuery_init(DNSQuery *query, const char *buf);
 
-#endif // DALE_DNS_QUERY_H
+#endif // DALE_NET_DNS_H

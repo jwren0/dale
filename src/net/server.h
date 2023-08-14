@@ -1,5 +1,5 @@
-#ifndef DALE_SERVER_H
-#define DALE_SERVER_H
+#ifndef DALE_NET_SERVER_H
+#define DALE_NET_SERVER_H
 
 /**
  * A file containing functionality
@@ -13,7 +13,7 @@
 #include <netinet/in.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "args.h"
+#include "../args.h"
 
 /**
  * The maximum size of a UDP message as defined
@@ -152,4 +152,4 @@ void forward_response(
     const size_t resp_len
 );
 
-#endif // DALE_SERVER_H
+#endif // DALE_NET_SERVER_H

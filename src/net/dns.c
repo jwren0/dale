@@ -1,4 +1,4 @@
-#include "query.h"
+#include "dns.h"
 
 int DNSQuestion_init(DNSQuestion *question, const char *buf) {
     int i, result = 1;
