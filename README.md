@@ -10,12 +10,34 @@ The intended purpose for now is to filter DNS queries based on the QNAME (domain
 This would allow you to control which domains you wish not to resolve,
 for purposes such as ad/tracker blocking.
 
+# Dependencies
+
+## Runtime
+To run dale, you will need the following:
+- [libpq](https://pkgs.org/download/libpq)
+
+## Development
+If you wish to build this project from source, you
+will also need the following:
+- A C compiler
+- [make](https://pkgs.org/download/make)
+- [pkg-config](https://pkgs.org/download/pkg-config)
+- [libpq-dev](https://pkgs.org/download/libpq-dev)
+
 # Quick start
 To install dale, run the following commands:
 ```
 $ git clone https://github.com/jwren0/dale.git
 $ cd dale/
 # make install
+```
+
+If you don't have make installed, you can use the following
+commands instead, replacing /usr/bin/ if necessary:
+```
+$ git clone https://github.com/jwren0/dale.git
+$ cd dale/
+# install -m 755 -v ./dale /usr/bin/
 ```
 
 ## Viewing usage
