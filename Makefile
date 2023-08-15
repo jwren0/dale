@@ -9,7 +9,8 @@ EXEC := dale
 
 ## Developer configuration ##
 CCFLAGS := $(CCFLAGS) -Wall -Wextra -Werror -Wformat-security \
-		-Wpedantic -pedantic-errors -std=c18
+		-Wpedantic -pedantic-errors -std=c18 \
+		$(shell pkg-config --cflags --libs libpq)
 
 SRC_FILES := $(shell find src/ -name "*.c")
 OBJ_FILES := ${SRC_FILES:.c=.o}
