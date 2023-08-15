@@ -1,6 +1,6 @@
-#include "dns.h"
+#include "query.h"
 
-int DNSQuestion_init(DNSQuestion *question, const char *buf) {
+int DNSQuestion_from(DNSQuestion *question, const char *buf) {
     int i, result = 1;
     uint8_t count = 0;
     uint16_t *qmeta = NULL;
@@ -57,7 +57,7 @@ int DNSQuestion_init(DNSQuestion *question, const char *buf) {
     return 0;
 }
 
-int DNSHeader_init(DNSHeader *header, const char *buf) {
+int DNSHeader_from(DNSHeader *header, const char *buf) {
     uint16_t *hptr = (uint16_t *) buf;
 
     if (header == NULL || buf == NULL) return 1;
@@ -83,15 +83,15 @@ int DNSHeader_init(DNSHeader *header, const char *buf) {
     return 0;
 }
 
-int DNSQuery_init(DNSQuery *query, const char *buf) {
+int DNSQuery_from(DNSQuery *query, const char *buf) {
     if (query == NULL || buf == NULL) return 1;
 
-    if (DNSHeader_init(&(query->header), buf) != 0) {
+    if (DNSHeader_from(&(query->header), buf) != 0) {
         fprintf(stderr, "Error: Malformed header\n");
         return 1;
     }
 
-    if (DNSQuestion_init(&(query->question), buf + 12) != 0) {
+    if (DNSQuestion_from(&(query->question), buf + 12) != 0) {
         fprintf(stderr, "Error: Malformed question section\n");
         return 1;
     }

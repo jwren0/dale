@@ -6,12 +6,12 @@
  * filtering DNS queries.
  *
  * @author  jwren0
- * @version 2023-08-14
+ * @version 2023-08-15
  */
 
 #include <stdio.h>
 #include <string.h>
-#include "../net/dns.h"
+#include "../net/dns/query.h"
 
 /**
  * Test function for checking if queries can

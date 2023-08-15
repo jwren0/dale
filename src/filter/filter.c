@@ -3,7 +3,7 @@
 int filter_query(const char *buf) {
     DNSQuery query;
 
-    if (DNSQuery_init(&query, buf) != 0) {
+    if (DNSQuery_from(&query, buf) != 0) {
         fprintf(stderr, "Failed parsing query\n");
         return -1;
     }

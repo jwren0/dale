@@ -1,44 +1,15 @@
-#ifndef DALE_NET_DNS_H
-#define DALE_NET_DNS_H
+#ifndef DALE_NET_DNS_QUERY_H
+#define DALE_NET_DNS_QUERY_H
 
 /**
- * A file containing definitions for structs, macros and functions
- * relating to DNS queries.
+ * A file containing definitions for structs,
+ * macros and functions relating to DNS queries.
  *
  * @author  jwren0
- * @version 2023-08-14
+ * @version 2023-08-15
  */
 
-#include <arpa/inet.h>
-#include <stddef.h>
-#include <stdint.h>
-#include <string.h>
-#include <stdio.h>
-
-/**
- * The maximum size of a domain name as defined
- * by RFC 1035 section 2.3.4.
- */
-#define MAX_NAME 255
-
-/**
- * The maximum size of a label as defined
- * by RFC 1035 section 2.3.4.
- */
-#define MAX_LABEL 63
-
-/**
- * A DNS header as described by
- * RFC 1035 section 4.1.1.
- */
-typedef struct {
-    uint16_t id;
-    uint16_t _meta;
-    uint16_t qdcount;
-    uint16_t ancount;
-    uint16_t nscount;
-    uint16_t arcount;
-} DNSHeader;
+#include "common.h"
 
 /**
  * Updates a DNSHeader struct based on a provided
@@ -48,7 +19,7 @@ typedef struct {
  * @param buf The buffer containing the header.
  * @return zero on success, non-zero otherwise.
  */
-int DNSHeader_init(DNSHeader *header, const char *buf);
+int DNSHeader_from(DNSHeader *header, const char *buf);
 
 /**
  * A macro to retrieve 'QR' from a DNSHeader.
@@ -91,16 +62,6 @@ int DNSHeader_init(DNSHeader *header, const char *buf);
 #define DNSHeader_rcode(header) (header)._meta & (1 << 3)
 
 /**
- * A DNS question section as defined by
- * RFC 1035 section 4.1.2.
- */
-typedef struct {
-    uint8_t qname[MAX_NAME + 1];
-    uint16_t qtype;
-    uint16_t qclass;
-} DNSQuestion;
-
-/**
  * Updates a DNSQuestion struct based on a provided
  * pointer to the beginning of a question section.
  *
@@ -110,7 +71,7 @@ typedef struct {
  * @param buf The buffer containing the question section.
  * @return zero on success, non-zero otherwise.
  */
-int DNSQuestion_init(DNSQuestion *question, const char *buf);
+int DNSQuestion_from(DNSQuestion *question, const char *buf);
 
 /**
  * A DNS query containing a header and question.
@@ -128,6 +89,6 @@ typedef struct {
  * @param buf The buffer containing the DNS query.
  * @return zero on success, non-zero otherwise.
  */
-int DNSQuery_init(DNSQuery *query, const char *buf);
+int DNSQuery_from(DNSQuery *query, const char *buf);
 
-#endif // DALE_NET_DNS_H
+#endif // DALE_NET_DNS_QUERY_H
