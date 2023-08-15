@@ -48,8 +48,7 @@ int DNSQuestion_from(DNSQuestion *question, const char *buf) {
 
     // buf should now be pointing at the end of
     // QNAME, increment once, then store QTYPE and QCLASS
-    buf++;
-    qmeta = (uint16_t *) buf;
+    qmeta = (uint16_t *) (buf + i + 1);
 
     question->qtype = ntohs(qmeta[0]);
     question->qclass = ntohs(qmeta[1]);

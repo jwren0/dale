@@ -17,11 +17,11 @@
  * Test function for checking if queries can
  * be filtered.
  *
- * @param buf The buffer containing the query.
+ * @param query The query to check.
  * @return zero if the query should be filtered,
  *         a negative value if an error occured,
  *         a positive value otherwise.
  */
-int filter_query(const char *buf);
+int filter_query(const DNSQuery *query);
 
 #endif // DALE_FILTER_FILTER_H

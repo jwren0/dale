@@ -71,6 +71,37 @@ typedef struct {
 } DNSResource;
 
 /**
+ * Writes a DNSQuestion to a buffer.
+ *
+ * @param question The DNSQuestion struct to use.
+ * @param buf The buffer to write to.
+ */
+void DNSQuestion_to(const DNSQuestion *question, char *buf);
+
+/**
+ * Stores a resource record for a null IPv4 address.
+ *
+ * @param resource The DNSResource struct to update.
+ */
+void DNSResource_null_a(DNSResource *resource);
+
+/**
+ * Stores a resource record for a null IPv6 address.
+ *
+ * @param resource The DNSResource struct to update.
+ */
+void DNSResource_null_aaaa(DNSResource *resource);
+
+/**
+ * Writes a DNSResource to a buffer.
+ *
+ * @param question The DNSResource struct to use.
+ * @param buf The buffer to write to.
+ * @return zero on success, non-zero otherwise
+ */
+int DNSResource_to(const DNSResource *resource, char *buf);
+
+/**
  * A DNS response containing a header, question,
  * and resource record.
  *
@@ -89,6 +120,20 @@ typedef struct {
  * @param query The query to use.
  * @return zero on success, non-zero otherwise.
  */
-int DNSResponse_from(DNSResponse *response, DNSQuery *query);
+int DNSResponse_from(DNSResponse *response, const DNSQuery *query);
+
+/**
+ * Writes a DNSResponse to a buffer.
+ *
+ * @param response The response to write.
+ * @param buf The buffer to write to.
+ * @param buf_len The size of the buffer being written to.
+ * @return The size of the response on success, negative value otherwise.
+ */
+int DNSResponse_to(
+    const DNSResponse *response,
+    char *buf,
+    const size_t buf_len
+);
 
 #endif // DALE_NET_DNS_RESPONSE_H

@@ -5,7 +5,7 @@
  * A file containing core functionality.
  *
  * @author  jwren0
- * @version 2023-08-14
+ * @version 2023-08-15
  */
 
 #include <stdio.h>
@@ -13,6 +13,7 @@
 #include "args.h"
 #include "filter/filter.h"
 #include "net/server.h"
+#include "net/dns/response.h"
 
 #define VERSION "v0.0.1"
 

@@ -4,35 +4,51 @@
 void handle(Socks *socks) {
     ssize_t count;
     int result;
-    char query[MAX_UDP << 1] = {0};
-    char resp[MAX_UDP << 1] = {0};
+    char buf_query[MAX_UDP << 1] = {0};
+    char buf_resp[MAX_UDP << 1] = {0};
+    DNSQuery query;
+    DNSResponse response;
 
     // Receive query from client (downstream)
     count = get_query(
         socks,
-        query, MAX_UDP + 1
+        buf_query, MAX_UDP + 1
     );
 
     // Check for failure
     if (count <= 0) return;
 
+    if (DNSQuery_from(&query, buf_query) != 0) {
+        return;
+    }
+
     // Check if the query should be filtered
-    result = filter_query(query);
+    result = filter_query(&query);
 
     // Check for failure
     if (result < 0) return;
 
     // Filtered query
     if (result == 0) {
-        // TODO: Send back a response for filtering
+        if (DNSResponse_from(&response, &query) != 0) {
+            return;
+        }
+
+        count = DNSResponse_to(&response, buf_resp, MAX_UDP + 1);
+        if (count < 0) return;
+
+        forward_response(
+            socks,
+            buf_resp, count
+        );
         return;
     }
 
     // Forward upstream
     count = forward_query(
         socks,
-        query, count,
-        resp, MAX_UDP + 1
+        buf_query, count,
+        buf_resp, MAX_UDP + 1
     );
 
     // Check for failure
@@ -41,7 +57,7 @@ void handle(Socks *socks) {
     // Forward response back to client (downstream)
     forward_response(
         socks,
-        resp, count
+        buf_resp, count
     );
 }
 
