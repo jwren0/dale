@@ -25,19 +25,11 @@ will also need the following:
 - [libpq-dev](https://pkgs.org/download/libpq-dev)
 
 # Quick start
-To install dale, run the following commands:
+To build and install dale, run the following commands:
 ```
 $ git clone https://github.com/jwren0/dale.git
 $ cd dale/
 # make install
-```
-
-If you don't have make installed, you can use the following
-commands instead, replacing /usr/bin/ if necessary:
-```
-$ git clone https://github.com/jwren0/dale.git
-$ cd dale/
-# install -m 755 -v ./dale /usr/bin/
 ```
 
 ## Viewing usage
