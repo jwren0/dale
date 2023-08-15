@@ -50,30 +50,30 @@ void Args_parse(Args *args, int argc, char *argv[]) {
 
         // -?/--help
         if (
-               !strncmp("-?", arg, strlen("-?") + 1)
-            || !strncmp("--help", arg, strlen("--help") + 1)
+               !strcmp("-?", arg)
+            || !strcmp("--help", arg)
         ) {
             Args_help(argv[0]);
             exit(0);
         }
         // -b/--background
         else if (
-               !strncmp("-b", arg, strlen("-b") + 1)
-            || !strncmp("--background", arg, strlen("--background") + 1)
+               !strcmp("-b", arg)
+            || !strcmp("--background", arg)
         ) {
             args->daemon = true;
         }
         // -f/--foreground
         else if (
-               !strncmp("-f", arg, strlen("-f") + 1)
-            || !strncmp("--foreground", arg, strlen("--foreground") + 1)
+               !strcmp("-f", arg)
+            || !strcmp("--foreground", arg)
         ) {
             args->daemon = false;
         }
         // -h/--lhost
         else if (
-               !strncmp("-h", arg, strlen("-h") + 1)
-            || !strncmp("--lhost", arg, strlen("--lhost") + 1)
+               !strcmp("-h", arg)
+            || !strcmp("--lhost", arg)
         ) {
             // Ensure argc is large enough
             if (i + 1 >= argc) {
@@ -86,8 +86,8 @@ void Args_parse(Args *args, int argc, char *argv[]) {
         }
         // -p/--lport
         else if (
-               !strncmp("-p", arg, strlen("-p") + 1)
-            || !strncmp("--lport", arg, strlen("--lport") + 1)
+               !strcmp("-p", arg)
+            || !strcmp("--lport", arg)
         ) {
             // ensure argc is large enough
             if (i + 1 >= argc) {
@@ -104,8 +104,8 @@ void Args_parse(Args *args, int argc, char *argv[]) {
         }
         // -H/--rhost
         else if (
-               !strncmp("-H", arg, strlen("-H") + 1)
-            || !strncmp("--rhost", arg, strlen("--rhost") + 1)
+               !strcmp("-H", arg)
+            || !strcmp("--rhost", arg)
         ) {
             // Ensure argc is large enough
             if (i + 1 >= argc) {
@@ -118,8 +118,8 @@ void Args_parse(Args *args, int argc, char *argv[]) {
         }
         // -P/--rport
         else if (
-               !strncmp("-P", arg, strlen("-P") + 1)
-            || !strncmp("--rport", arg, strlen("--rport") + 1)
+               !strcmp("-P", arg)
+            || !strcmp("--rport", arg)
         ) {
             // ensure argc is large enough
             if (i + 1 >= argc) {
