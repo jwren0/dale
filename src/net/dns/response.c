@@ -42,8 +42,9 @@ void DNSResource_null_aaaa(DNSResource *resource) {
     resource->type = TYPE_AAAA;
     resource->class_ = CLASS_IN;
     resource->ttl = 60;
-    resource->rdlength = 2;
-    resource->rdata = (uint8_t *) "::"; // ::
+    resource->rdlength = 16;
+    resource->rdata = (uint8_t *) "\x00\x00\x00\x00\x00\x00\x00\x00"
+                                  "\x00\x00\x00\x00\x00\x00\x00\x00"; // ::
 }
 
 int DNSResource_to(const DNSResource *resource, char *buf) {
@@ -100,10 +101,9 @@ int DNSResponse_from(DNSResponse *response, const DNSQuery *query) {
             DNSResource_null_a(&(response->resource));
             break;
 
-        // TODO: Fix this
-        // case TYPE_AAAA:
-        //     DNSResource_null_aaaa(&(response->resource));
-        //     break;
+        case TYPE_AAAA:
+            DNSResource_null_aaaa(&(response->resource));
+            break;
 
         default:
             fprintf(
@@ -137,14 +137,14 @@ int DNSResponse_to(
     // Resource requires:
     //  2 bytes (for pointer to name)
     //  10 bytes for type, class, ttl and rdlength
-    //  4 bytes (for A) or 2 bytes (for AAAA)
+    //  4 bytes (for A) or 16 bytes (for AAAA)
 
     min_required += (qname_len + 2) + 4 + 12;
 
     if (response->question.qtype == TYPE_A) {
         min_required += 4;
     } else if (response->question.qtype == TYPE_AAAA) {
-        min_required += 2;
+        min_required += 16;
     } else {
         fprintf(
             stderr,
@@ -186,10 +186,10 @@ int DNSResponse_to(
     result = DNSResource_to(
         &(response->resource),
         // Skip header and question
-        buf + 12 + (qname_len + 1) + 5
+        buf + 12 + (qname_len + 2) + 4
     );
 
     if (result != 0) return -1;
 
-    return min_required;
+    return 12 + (qname_len + 2) + 4 + 2 + 10 + response->resource.rdlength;
 }
