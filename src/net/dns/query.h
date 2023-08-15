@@ -12,6 +12,25 @@
 #include "common.h"
 
 /**
+ * Possible QTYPE values as defined
+ * by RFC 1035 section 3.2.3.
+ *
+ * These extend the already defined TYPE values.
+ */
+#define QTYPE_AXFR  252
+#define QTYPE_MAILB 253
+#define QTYPE_MAILA 254
+#define QTYPE_ALL   255
+
+/**
+ * Possible QCLASS values as defined
+ * by RFC 1035 section 3.2.5.
+ *
+ * These extend the already defined CLASS values.
+ */
+#define QCLASS_ANY 255
+
+/**
  * Updates a DNSHeader struct based on a provided
  * pointer to the beginning of a header.
  *
