@@ -8,8 +8,13 @@ int filter_query(const char *buf) {
         return -1;
     }
 
-    // Only check A records (for now)
-    if (query.question.qtype != TYPE_A) return 1;
+    // Only check A and AAAA records (for now)
+    if (
+           query.question.qtype != TYPE_A
+        && query.question.qtype != TYPE_AAAA
+    ) {
+        return 1;
+    }
 
     // Check for filter
     if (!strncmp(
